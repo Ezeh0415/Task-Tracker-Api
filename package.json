@@ -1,0 +1,31 @@
+{
+  "name": "task-tracker-api",
+  "version": "1.0.0",
+  "description": "trying to create a task tracker api wit the functionality of create update delete and progress status",
+  "main": "App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon App.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ezeh0415/Task-Tracker-Api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ezeh0415/Task-Tracker-Api/issues"
+  },
+  "homepage": "https://github.com/Ezeh0415/Task-Tracker-Api#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.1.11",
+    "pg": "^8.16.3",
+    "sanitize-html": "^2.17.0"
+  }
+}
