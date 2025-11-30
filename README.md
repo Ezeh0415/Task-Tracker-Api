@@ -9,6 +9,8 @@ All routes are protected using an API Key middleware, ensuring only authorized c
 
 🚀 Features
 
+Auth 
+
 Create Tasks
 
 Update Task Priority
@@ -29,6 +31,11 @@ Organized MVC-style structure (Controllers + Routes)
 ├── Config/
 │ └── Api-key.js # API key authentication middleware
 │
+├── Contr/
+│ ├── SignUp.js # Handles users SignUp
+│ ├── Login.js # Handles users Login
+│
+|
 ├── Contr/
 │ ├── CreateTask.js # Handles creating tasks
 │ ├── UpdateTask.js # Handles updating tasks
