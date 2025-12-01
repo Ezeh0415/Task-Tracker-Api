@@ -2,9 +2,9 @@ const db = require("../Config/DataBase");
 const sanitizeHtml = require("sanitize-html");
 
 const AddTask = async (req, res) => {
-  const { title, email, description, dueDate, priority, status } = req.body;
+  const { title, email, description, due_Date, priority, status } = req.body;
 
-  if (!title || !email || !description || !dueDate || !priority || !status) {
+  if (!title || !email || !description || !due_Date || !priority || !status) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -15,7 +15,7 @@ const AddTask = async (req, res) => {
       sanitizeHtml(title),
       sanitizeHtml(email),
       sanitizeHtml(description),
-      dueDate,
+      due_Date,
       sanitizeHtml(priority),
       sanitizeHtml(status),
     ];

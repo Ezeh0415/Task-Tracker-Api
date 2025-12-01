@@ -1,4 +1,4 @@
-const db = require("../Config/DataBases");
+const db = require("../Config/DataBase");
 const sanitizeHtml = require("sanitize-html");
 const generateToken = require("../Config/JWT-Token");
 
