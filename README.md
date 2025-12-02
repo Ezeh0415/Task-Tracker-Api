@@ -1,131 +1,140 @@
-# Task-Tracker-Api
+📝 Task Manager API – Frontend Integration Guide
 
-trying to create a task tracker api wit the functionality of create update delete and progress status
+This document explains how frontend developers can interact with the Task Manager backend API.
+All endpoints below require specific headers and, in some cases, authentication tokens.
 
-📌 Task Management API
+🔑 Required Headers
 
-A simple REST API built with Node.js, Express, and PostgreSQL for creating, updating, and deleting tasks.
-All routes are protected using an API Key middleware, ensuring only authorized clients can access the API.
+1. API Key (Required for all routes) ("coded-by-ezeh-godwin")
 
-🚀 Features
+Every request must include the API key:
 
-Auth 
+x-api-key: YOUR_API_KEY
 
-Create Tasks
+2. JWT Token (Required for protected routes)
+
+For routes that modify tasks, include the JWT token returned after login:
+
+Authorization: Bearer <your_jwt_token>
+
+📌 Base URL
+
+Replace with your backend server URL:
+
+https://your-backend-url.com/api
+
+📚 Routes Overview
+1️⃣ User Authentication
+Signup
+
+POST /signup
+Create a new user account.
+
+Request Body:
+{
+"username": "example",
+"email": "user@example.com",
+"password": "password123"
+}
+
+Headers:
+
+x-api-key
+
+Login
+
+POST /login
+Login and receive a JWT token.
+
+Request Body:
+{
+"email": "user@example.com",
+"password": "password123"
+}
+
+Response:
+{
+"token": "YOUR_JWT_TOKEN",
+"user": { ... }
+}
+
+Headers:
+
+x-api-key
+
+2️⃣ Task Management Routes
+
+All task routes require:
+
+x-api-key
+
+Authorization: Bearer <token>
+
+Create a Task
+
+POST /create
+
+Request Body:
+{
+"title": "Buy groceries",
+"description": "Milk, eggs, bread",
+"priority": "high"
+}
 
 Update Task Priority
 
+PUT /update/priority/:id
+
+Request Body:
+{
+"priority": "low"
+}
+
 Update Task Status
 
-Mark Tasks as Completed
+PUT /update/status/:id
 
-Delete Tasks
-
-API Key Middleware Protection
-
-Organized MVC-style structure (Controllers + Routes)
-
-📂 Project Structure
-/project
-│
-├── Config/
-│ └── Api-key.js # API key authentication middleware
-│
-├── Contr/
-│ ├── SignUp.js # Handles users SignUp
-│ ├── Login.js # Handles users Login
-│
-|
-├── Contr/
-│ ├── CreateTask.js # Handles creating tasks
-│ ├── UpdateTask.js # Handles updating tasks
-│ └── DeleteTask.js # Handles deleting tasks
-│
-├── Routes/
-│ └── TaskRoute.js # All task-related endpoints
-│
-└── app.js # Main Express server
-
-🔒 API Key Authentication
-
-Every route uses the API key middleware:
-
-router.post("/create", APIKEY, CreateTask.AddTask);
-
-The client must send the API key in request headers:
-
-api-key: "coded-by-ezeh-godwin"
-
-If the key is missing or invalid, the request is rejected.
-
-📡 API Endpoints
-➕ Create a Task
-
-POST /task/create
-
-Request Headers
-api-key: YOUR_API_KEY
-
-Body (JSON)
+Request Body:
 {
-"title": "Finish project",
-"description": "Work on task manager API",
-"due_date": "2025-02-20",
-"priority": "High",
-"status": "Pending"
+"status": "in-progress"
 }
 
-🔧 Update Task Priority
+Mark Task as Completed
 
-PUT /task/update/priority/:id
+PUT /update/completed/:id
 
-Example
-PUT /task/update/priority/5
+No body required (unless your backend expects one).
 
-Body
-{
-"priority": "Medium"
-}
+Delete a Task
 
-🔧 Update Task Status
+DELETE /delete/:id
 
-PUT /task/update/status/:id
+Deletes a task by its ID.
 
-Example
-PUT /task/update/status/5
+🧭 Example Frontend Usage (Fetch)
+Create Task Example
+await fetch("/api/create", {
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"x-api-key": process.env.API_KEY,
+Authorization: `Bearer ${userToken}`,
+},
+body: JSON.stringify({
+title: "New Task",
+description: "Details...",
+priority: "medium",
+}),
+});
 
-Body
-{
-"status": "In Progress"
-}
+📌 Notes for Frontend Developers
 
-✔️ Mark Task as Completed
+Always store JWT tokens securely (ex: localStorage or secure cookie depending on app security level).
 
-PUT /task/update/completed/:id
+Every request must include x-api-key, even public ones like login/signup.
 
-Example
-PUT /task/update/completed/5
+Task modification routes will fail without a valid JWT token.
 
-Body
-{
-"completed": true
-}
+Handle 401 and 403 responses to force user logout if token expires.
 
-🗑️ Delete a Task
-
-DELETE /task/delete/:id
-
-Example
-DELETE /task/delete/5
-
-📝 How It Works
-
-The router defines all task endpoints.
-
-Before each controller runs, the APIKEY middleware validates the incoming API key.
-
-Controllers perform database operations (create/update/delete tasks).
-
-Responses are returned in JSON format.
-
-This setup keeps your API modular, secure, and easy to expand.
+API Key and JWT Token are not interchangeable.
