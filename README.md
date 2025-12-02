@@ -21,7 +21,7 @@ Authorization: Bearer <your_jwt_token>
 
 Replace with your backend server URL:
 
-https://your-backend-url.com/api
+http:localhost8080
 
 📚 Routes Overview
 1️⃣ User Authentication
