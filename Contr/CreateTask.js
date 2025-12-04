@@ -1,5 +1,6 @@
 const db = require("../Config/DataBase");
 const sanitizeHtml = require("sanitize-html");
+const { TasksSchema } = require("../Model/Schema");
 
 const AddTask = async (req, res) => {
   const { title, email, description, due_Date, priority, status } = req.body;
@@ -9,22 +10,17 @@ const AddTask = async (req, res) => {
   }
 
   try {
-    const query = `INSERT INTO tasks (title,email, description, due_date, priority, status) VALUES ($1, $2, $3, $4, $5, $6)`;
-
-    const values = [
-      sanitizeHtml(title),
-      sanitizeHtml(email),
-      sanitizeHtml(description),
-      due_Date,
-      sanitizeHtml(priority),
-      sanitizeHtml(status),
-    ];
-
-    await db.query(query, values);
-    db.end();
+    await db.insert(TasksSchema).values({
+      title: sanitizeHtml(title),
+      email: sanitizeHtml(email),
+      description: sanitizeHtml(description),
+      due_date: sanitizeHtml(due_Date),
+      priority: sanitizeHtml(priority),
+      status: sanitizeHtml(status),
+    });
     return res.status(201).json({ message: "Task added successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Error adding task" });
+    return res.status(500).json({ error: error, message: "Error adding task" });
   }
 };
 

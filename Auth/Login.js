@@ -10,9 +10,10 @@ const Login = async (req, res) => {
   }
 
   try {
-    const user = await db.query("SELECT * FROM users WHERE email = $1", [
-      sanitizeHtml(email),
-    ]);
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, sanitizeHtml(email)));
     if (user.email !== email) {
       return res.status(400).json({ message: "user not found sign up" });
     }

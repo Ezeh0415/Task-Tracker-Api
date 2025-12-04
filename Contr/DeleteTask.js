@@ -1,4 +1,5 @@
 const db = require("../Config/DataBase");
+const { tasks } = require("../Model/Schema");
 
 const deleteTask = async (req, res) => {
   const { id } = req.params;
@@ -8,12 +9,7 @@ const deleteTask = async (req, res) => {
   }
 
   try {
-    const query = `DELETE FROM tasks WHERE id = ? VALUES ($1)`;
-
-    const values = [id];
-
-    await db.query(query, values);
-    db.end();
+    await db.delete(tasks).where(eq(tasks.id, id));
     return res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
     console.error(error);

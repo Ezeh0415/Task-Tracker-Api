@@ -3,10 +3,10 @@ const key = "coded-by-ezeh-godwin";
 
 const handlePost = () => {
   // const firstName = "Ezeanwe";
-  const title = "restapi set up";
-  const email = "ezeanwechigozie@gmail.com";
-  const description = "first rest api set up";
-  const due_Date = "1997-06-27";
+  const title = "drizzle set up";
+  const email = "ezeanwe@gmail.com";
+  const description = "first drizzle set up";
+  const due_Date = "2025/12/04";
   const priority = "high";
   const status = "active";
   fetch(`${Base_Url}create?key=${key}`, {
