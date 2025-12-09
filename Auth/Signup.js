@@ -1,7 +1,7 @@
 const db = require("../Config/DataBase");
 const sanitizeHtml = require("sanitize-html");
 const bcrypt = require("bcrypt");
-const generateToken = require("../Config/JWT-Token");
+const generateToken = require("../Middleware/JWT-Token");
 const { eq } = require("drizzle-orm");
 const { UsersSchema } = require("../Model/Schema");
 const saltRound = 10;

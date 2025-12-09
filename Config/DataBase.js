@@ -4,31 +4,45 @@ const { drizzle } = require("drizzle-orm/node-postgres");
 const { TasksTable, UsersTable } = require("../Model/Tables");
 const { Pool } = pkg;
 
-// Build PostgreSQL connection URL from environment variables
-const connectionString = `postgresql://${encodeURIComponent(
-  process.env.DB_USER
-)}:${encodeURIComponent(process.env.DB_PASSWORD)}@${process.env.DB_HOST}:${
-  process.env.DB_PORT
-}/${process.env.DB_NAME}`;
+// Parse numeric port (fall back to 5432)
+const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432;
 
-// Create a pg Pool with SSL disabled (or configure SSL as needed)
+// Create a pg Pool with explicit fields (more robust than a built connection string)
 const pool = new Pool({
-  connectionString,
-  ssl: false, // or { rejectUnauthorized: false } if your server supports SSL
+  host: process.env.DB_HOST || "localhost",
+  port: dbPort,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: false,
+  max: 10,
+  idleTimeoutMillis: 30000,
 });
 
 // Initialize Drizzle with the pool
 const db = drizzle({ client: pool });
 
-// Test connection
+// Test connection and create tables with clearer logging
 (async () => {
   try {
-    await pool.query("select 1"); // simple test query
+    console.log("DB connect attempt:", {
+      host: pool.options.host,
+      port: pool.options.port,
+      database: pool.options.database,
+      user: pool.options.user,
+    });
+
+    await pool.query("SELECT 1");
     console.log("Database connection successful");
-    await pool.query(UsersTable); // user table creation
-    await pool.query(TasksTable); // task table creation
+
+    // Create tables and log results/errors explicitly
+    await pool.query(UsersTable);
+    console.log("Users table creation attempted");
+
+    await pool.query(TasksTable);
+    console.log("Tasks table creation attempted");
   } catch (err) {
-    console.error("Database connection failed:", err);
+    console.error("Database connection or setup failed:", err);
   }
 })();
 

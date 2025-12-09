@@ -1,6 +1,7 @@
 const db = require("../Config/DataBase");
 const sanitizeHtml = require("sanitize-html");
-const generateToken = require("../Config/JWT-Token");
+const generateToken = require("../Middleware/JWT-Token");
+const { eq } = require("drizzle-orm");
 
 const Login = async (req, res) => {
   const { email, password } = req.body;
