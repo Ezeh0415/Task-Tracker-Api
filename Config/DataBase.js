@@ -25,22 +25,15 @@ const db = drizzle({ client: pool });
 // Test connection and create tables with clearer logging
 (async () => {
   try {
-    console.log("DB connect attempt:", {
-      host: pool.options.host,
-      port: pool.options.port,
-      database: pool.options.database,
-      user: pool.options.user,
-    });
-
-    await pool.query("SELECT 1");
-    console.log("Database connection successful");
-
     // Create tables and log results/errors explicitly
     await pool.query(UsersTable);
     console.log("Users table creation attempted");
 
     await pool.query(TasksTable);
     console.log("Tasks table creation attempted");
+
+    await pool.query("SELECT 1");
+    console.log("Database connection successful");
   } catch (err) {
     console.error("Database connection or setup failed:", err);
   }

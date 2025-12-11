@@ -11,7 +11,7 @@ const TasksTable = `
 CREATE TABLE IF NOT EXISTS tasks (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL,
   description VARCHAR(255) NOT NULL,
   due_date VARCHAR(50) NOT NULL,
   priority VARCHAR(255) NOT NULL,

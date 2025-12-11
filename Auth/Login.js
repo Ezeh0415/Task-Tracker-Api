@@ -1,7 +1,8 @@
 const db = require("../Config/DataBase");
-const sanitizeHtml = require("sanitize-html");
 const generateToken = require("../Middleware/JWT-Token");
 const { eq } = require("drizzle-orm");
+const Users = require("../Model/UsersSchema");
+const bcrypt = require("bcrypt");
 
 const Login = async (req, res) => {
   const { email, password } = req.body;
@@ -11,15 +12,12 @@ const Login = async (req, res) => {
   }
 
   try {
-    const user = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, sanitizeHtml(email)));
-    if (user.email !== email) {
+    const user = await db.select().from(Users).where(eq(Users.email, email));
+    if (user.email === email) {
       return res.status(400).json({ message: "user not found sign up" });
     }
 
-    const isValidPassword = bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
       return res.status(400).json({ message: "Invalid password" });
@@ -33,7 +31,9 @@ const Login = async (req, res) => {
       token: token,
     });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 };
 

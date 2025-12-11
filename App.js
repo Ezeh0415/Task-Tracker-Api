@@ -1,10 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const Router = require("./Router/Router");
+const morgan = require("morgan");
 
 const app = express();
 
 app.use(express.json({ limit: "70mb" }));
+app.use(morgan("dev"));
 
 // Handle preflight OPTIONS
 app.use((req, res, next) => {

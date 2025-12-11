@@ -1,6 +1,7 @@
 const { eq } = require("drizzle-orm");
 const db = require("../Config/DataBase");
 const sanitizeHtml = require("sanitize-html");
+const Tasks = require("../Model/TasksSchema");
 
 const updatePriority = async (req, res) => {
   const { id } = req.params;
@@ -18,9 +19,9 @@ const updatePriority = async (req, res) => {
 
   try {
     await db
-      .update(tasks)
+      .update(Tasks)
       .set({ priority: sanitizeHtml(priority) })
-      .where(eq(tasks.id, id));
+      .where(eq(Tasks.id, id));
 
     return res.status(200).json({ message: "Priority updated successfully" });
   } catch (error) {
@@ -38,9 +39,9 @@ const updateStatus = async (req, res) => {
 
   try {
     await db
-      .update(tasks)
+      .update(Tasks)
       .set({ status: sanitizeHtml(status) })
-      .where(eq(tasks.id, id));
+      .where(eq(Tasks.id, id));
 
     return res.status(200).json({ message: "Status updated successfully" });
   } catch (error) {

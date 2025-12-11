@@ -3,7 +3,7 @@ const sanitizeHtml = require("sanitize-html");
 const bcrypt = require("bcrypt");
 const generateToken = require("../Middleware/JWT-Token");
 const { eq } = require("drizzle-orm");
-const { UsersSchema } = require("../Model/Schema");
+const Users = require("../Model/UsersSchema");
 const saltRound = 10;
 
 const SignUp = async (req, res) => {
@@ -19,14 +19,13 @@ const SignUp = async (req, res) => {
       .json({ error: "Password must be at least 6 characters" });
   }
 
-  const hashedpwd = bcrypt.hash(password, saltRound);
+  const hashedpwd = await bcrypt.hash(password, saltRound);
 
   try {
-
     const existingUser = await db
       .select()
-      .from(users)
-      .where(eq(users.email, email));
+      .from(Users)
+      .where(eq(Users.email, email));
 
     if (existingUser.email === email) {
       return res.status(400).json({ error: "user already exists" });
@@ -35,14 +34,14 @@ const SignUp = async (req, res) => {
     const inputs = {
       name: sanitizeHtml(name),
       email: sanitizeHtml(email),
-      password: sanitizeHtml(hashedpwd),
+      password: hashedpwd,
     };
 
-    await db.insert(UsersSchema).values(inputs);
+    await db.insert(Users).values(inputs);
 
-    const user = await db.select().from(users).where(eq(users.email, email));
+    const user = await db.select().from(Users).where(eq(Users.email, email));
 
-    const token = generateToken(user.email);
+    const token = generateToken(user);
 
     res.status(200).json({
       message: "User created successfully",
@@ -50,7 +49,7 @@ const SignUp = async (req, res) => {
       token: token,
     });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 };
 
