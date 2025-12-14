@@ -12,9 +12,12 @@ const Login = async (req, res) => {
   }
 
   try {
-    const user = await db.select().from(Users).where(eq(Users.email, email));
-    if (user.email === email) {
-      return res.status(400).json({ message: "user not found sign up" });
+    const users = await db.select().from(Users).where(eq(Users.email, email));
+    const user = users[0];
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found, please sign up" });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
@@ -23,11 +26,13 @@ const Login = async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
 
+    console.log(user);
+
     const token = generateToken(user);
 
     res.status(200).json({
       message: "User login successfully",
-      data: user,
+      data: { id: user.id, name: user.name, email: user.email },
       token: token,
     });
   } catch (error) {

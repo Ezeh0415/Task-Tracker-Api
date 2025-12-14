@@ -6,6 +6,8 @@ const AuthLogin = require("../Auth/Login");
 const CreateTask = require("../Contr/CreateTask");
 const UpdateTask = require("../Contr/UpdateTask");
 const DeleteTask = require("../Contr/DeleteTask");
+const Payment = require("../Contr/Payment/Payment");
+const Webhook = require("../Contr/Payment/Webhook");
 
 router.post("/signup", Require_Api_key, AuthSignup.SignUp);
 router.post("/login", Require_Api_key, AuthLogin.Login);
@@ -37,5 +39,10 @@ router.delete(
   Require_jwt_key,
   DeleteTask.deleteTask
 );
+
+// payment routes
+router.post("/payment", Require_Api_key, Require_jwt_key, Payment.Payment);
+
+router.post("/webhook/paystack", Webhook.Webhook);
 
 module.exports = router;

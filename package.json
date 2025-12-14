@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Ezeh0415/Task-Tracker-Api#readme",
   "dependencies": {
+    "@ngrok/ngrok": "^1.6.1",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.0",
